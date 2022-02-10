@@ -31,6 +31,22 @@ For more information, please contact us at [arctic@man.com](arctic@man.com).
 
 ---
 
+---
+
+:loudspeaker::loudspeaker::loudspeaker: **BUILDING THE NEXT GENERATION OF ARCTIC** :loudspeaker::loudspeaker::loudspeaker:
+
+Man Group is currently building the next generation of Arctic.
+
+This will offer the same intuitive Python-centric API whilst utilizing a custom C++ storage engine and modern S3 compatible object storage to provide a timeseries database that is:
+
+* **Fast**: Capable of processing billions of rows in seconds
+* **Flexible**: Designed to handle complex real-world datasets
+* **Familiar**: Built for the modern Python Data Science ecosystem - Pandas In/Pandas Out!
+
+For more information, please contact us at [arctic@man.com](arctic@man.com). 
+
+---
+
 ## Quickstart
 
 ### Install Arctic
