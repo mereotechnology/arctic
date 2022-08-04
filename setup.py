@@ -70,7 +70,7 @@ setup(
     long_description_content_type="text/markdown",
     cmdclass={'test': PyTest},
     setup_requires=["six",
-                    "numpy<=1.18.4",
+                    "numpy",
                     "setuptools-git",
                    ],
     install_requires=["decorator",
@@ -78,8 +78,8 @@ setup(
                       #"enum34",
                       "mock",
                       "mockextras",
-                      "pandas<=1.2.5",
-                      "numpy<=1.18.4",
+                      "pandas",
+                      "numpy",
                       "pymongo>=3.6.0, <= 3.11.0"
                       #"pytest-server-fixtures", # must be manual
                       "pytest-cov",
