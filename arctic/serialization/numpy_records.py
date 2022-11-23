@@ -1,4 +1,3 @@
-import six
 import logging
 
 import numpy as np
@@ -96,7 +95,13 @@ class PandasSerializer(object):
         if len(index) == 1:
             rtn = Index(np.copy(recarr[str(index[0])]), name=index[0])
             if isinstance(rtn, DatetimeIndex) and 'index_tz' in recarr.dtype.metadata:
-                rtn = rtn.tz_localize('UTC').tz_convert(recarr.dtype.metadata['index_tz'])
+                if PD_VER >= '1.0.4':
+                    if isinstance(recarr.dtype.metadata['index_tz'], list):
+                        rtn = rtn.tz_localize('UTC').tz_convert(recarr.dtype.metadata['index_tz'][0])
+                    else:
+                        rtn = rtn.tz_localize('UTC').tz_convert(recarr.dtype.metadata['index_tz'])
+                else:
+                    rtn = rtn.tz_localize('UTC').tz_convert(recarr.dtype.metadata['index_tz'])
         else:
             level_arrays = []
             index_tz = recarr.dtype.metadata.get('index_tz', [])
@@ -235,9 +240,6 @@ class SeriesSerializer(PandasSerializer):
         data = item[name]
 
         if force_bytes_to_unicode:
-            if six.PY2 and isinstance(name, (bytes, str)):
-                name = name.decode('utf-8')
-
             if len(data) and isinstance(data[0], bytes):
                 data = data.astype('unicode')
 

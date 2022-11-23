@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import pymongo
 import pytest
-import six
 from mock import Mock, patch
 from pandas.util.testing import assert_frame_equal, assert_series_equal
 from pymongo.errors import OperationFailure
@@ -27,7 +26,7 @@ from arctic.store import version_store
 from tests.unit.serialization.serialization_test_data import _mixed_test_data
 from ...util import read_str_as_pandas
 from ..test_utils import enable_profiling_for_library
-from tests.util import assert_frame_equal_
+from tests.util import assert_frame_equal_, assert_series_equal_
 
 ts1 = read_str_as_pandas("""         times | near
                    2012-09-08 17:06:11.040 |  1.0
@@ -384,7 +383,7 @@ def test_list_version(library, fw_pointers_cfg):
         assert len(list(library.list_versions(symbol))) == 0
         dates = [None, None, None]
         now = dt.utcnow().replace(tzinfo=mktz('UTC'))
-        for x in six.moves.xrange(len(dates)):
+        for x in range(len(dates)):
             dates[x] = now - dtd(minutes=130 - x)
             with patch("bson.ObjectId", return_value=bson.ObjectId.from_datetime(dates[x])):
                 library.write(symbol, ts1, prune_previous_version=False)
@@ -424,7 +423,7 @@ def test_list_version_latest_only(library):
     assert len(list(library.list_versions(symbol))) == 0
     dates = [None, None, None]
     now = dt.utcnow().replace(tzinfo=mktz('UTC'))
-    for x in six.moves.xrange(len(dates)):
+    for x in range(len(dates)):
         dates[x] = now - dtd(minutes=20 - x)
         with patch("bson.ObjectId", return_value=bson.ObjectId.from_datetime(dates[x])):
             library.write(symbol, ts1, prune_previous_version=False)
@@ -1744,7 +1743,7 @@ def test_can_write_tz_aware_data_series(library, fw_pointers_cfg):
         # Arctic converts by default the data to UTC, convert back
         read_data = read_data.dt.tz_localize('UTC').dt.tz_convert(read_data.index.tzinfo)
         assert library._versions.find_one({'symbol': 'symTzSer'})['type'] == PandasSeriesStore.TYPE
-        assert_series_equal(myseries, read_data)
+        assert_series_equal_(myseries, read_data, check_freq=False)
 
 
 @pytest.mark.parametrize('write_cfg, read_cfg, append_cfg, reread_cfg', [

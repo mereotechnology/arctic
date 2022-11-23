@@ -23,6 +23,7 @@ from setuptools import find_packages
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
+long_description_content_type='text/markdown'
 long_description = open('README.md').read()
 changelog = open('CHANGES.md').read()
 
@@ -44,13 +45,12 @@ class PyTest(TestCommand):
 
         # import here, cause outside the eggs aren't loaded
         import pytest
-        import six
 
-        args = [self.pytest_args] if isinstance(self.pytest_args, six.string_types) else list(self.pytest_args)
+        args = [self.pytest_args] if isinstance(self.pytest_args, str) else list(self.pytest_args)
         args.extend(['--cov', 'arctic',
                      '--cov-report', 'xml',
                      '--cov-report', 'html',
-                     '--junitxml', 'junit.xml',
+                     '--junitxml', 'test-results/junit.xml',
                      ])
         errno = pytest.main(args)
         sys.exit(errno)
@@ -60,7 +60,7 @@ setup(
     name="arctic",
     version="1.80.5",
     author="Man AHL Technology",
-    author_email="ManAHLTech@ahl.com",
+    author_email="arctic@man.com",
     description=("AHL Research Versioned TimeSeries and Tick store"),
     license="GPL",
     keywords=["ahl", "keyvalue", "tickstore", "mongo", "timeseries", ],
@@ -69,8 +69,7 @@ setup(
     long_description='\n'.join((long_description, changelog)),
     long_description_content_type="text/markdown",
     cmdclass={'test': PyTest},
-    setup_requires=["six",
-                    "numpy",
+    setup_requires=["numpy<1.19.0",
                     "setuptools-git",
                    ],
     install_requires=["decorator",
@@ -79,12 +78,8 @@ setup(
                       "mockextras",
                       "pandas",
                       "numpy",
-                      "pymongo>=3.6.0, <= 3.11.0"
-                      #"pytest-server-fixtures", # must be manual
-                      "pytest-cov",
-                      "pytest",
+                      "pymongo>=3.6.0, <= 3.11.0",
                       "pytz",
-                      "tomli==1.2.3; python_version=='3.6'",
                       "tzlocal",
                       "lz4",
                      ],
@@ -97,6 +92,7 @@ setup(
                    "pytest-server-fixtures",
                    "pytest-timeout",
                    "pytest-xdist<=1.26.1",
+                   "tomli<2; python_version=='3.6'",
                    "lz4"
                   ],
     entry_points={'console_scripts': [
@@ -115,6 +111,7 @@ setup(
         "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: Implementation :: CPython",
         "Operating System :: POSIX",
         "Operating System :: MacOS",
